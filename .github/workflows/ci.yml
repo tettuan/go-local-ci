@@ -1,0 +1,80 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Deno
+      uses: denoland/setup-deno@v2
+      with:
+        deno-version: v2.x
+
+    - name: Setup Go (for testing)
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.21'
+
+    - name: Cache Deno dependencies
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/deno
+        key: ${{ runner.os }}-deno-${{ hashFiles('**/deno.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-deno-
+
+    - name: Check formatting
+      run: deno fmt --check
+
+    - name: Run linter
+      run: deno lint
+
+    - name: Type check
+      run: deno check mod.ts
+
+    - name: Run tests
+      run: deno test --allow-read --allow-write --allow-run --allow-env
+
+    - name: Test CLI functionality
+      run: |
+        # Test with simple Go project fixture
+        deno run --allow-read --allow-write --allow-run --allow-env ./mod.ts \
+          --cwd ./tests/fixtures/simple-go-project --log-mode silent
+        
+        # Test with multi-package project fixture
+        deno run --allow-read --allow-write --allow-run --allow-env ./mod.ts \
+          --cwd ./tests/fixtures/multi-package-project --log-mode silent || true
+        
+        # Test hierarchy targeting
+        deno run --allow-read --allow-write --allow-run --allow-env ./mod.ts \
+          --cwd ./tests/fixtures/multi-package-project \
+          --hierarchy ./cmd/calculator --log-mode silent || true
+
+  publish:
+    runs-on: ubuntu-latest
+    needs: ci
+    if: github.ref == 'refs/heads/main'
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Deno
+      uses: denoland/setup-deno@v2
+      with:
+        deno-version: v2.x
+
+    - name: Publish to JSR
+      run: deno publish
