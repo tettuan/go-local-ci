@@ -30,3 +30,9 @@ go.work.sum
 # Editor/IDE
 # .idea/
 # .vscode/
+
+# Deno cache and build artifacts
+.deno/
+tests/fixtures/*/simple-project
+tests/fixtures/*/*_test
+tests/fixtures/*/main
