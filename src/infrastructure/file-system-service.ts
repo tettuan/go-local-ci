@@ -150,4 +150,11 @@ export class FileSystemService {
       return failure(new Error(`Failed to get file info: ${path}`));
     }
   }
+
+  /**
+   * Gets the directory path of a file
+   */
+  getDirectoryPath(filePath: string): string {
+    return dirname(filePath);
+  }
 }

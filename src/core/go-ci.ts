@@ -7,6 +7,7 @@ import { FileSystemService } from '../infrastructure/file-system-service.ts';
 import { GoProjectDiscovery } from '../infrastructure/go-project-discovery.ts';
 import type { Result } from '../utils/result.ts';
 import { failure, success } from '../utils/result.ts';
+import { SimilarTestFinder } from '../services/similar-test-finder.ts';
 
 /**
  * Execution result for a batch of packages
@@ -21,13 +22,17 @@ interface ExecutionResult {
  * Main Go CI runner class
  */
 export class GoCI {
+  private readonly similarTestFinder: SimilarTestFinder;
+
   private constructor(
     private readonly logger: GoCILogger,
     private readonly config: GoCIConfig,
     private readonly processRunner: ProcessRunner,
     private readonly fileSystem: FileSystemService,
     private readonly projectDiscovery: GoProjectDiscovery,
-  ) {}
+  ) {
+    this.similarTestFinder = new SimilarTestFinder(logger, fileSystem, processRunner);
+  }
 
   /**
    * Creates a new Go CI runner instance
@@ -332,6 +337,9 @@ export class GoCI {
         for (const pkg of failedPackages) {
           this.logger.logPackageError(pkg, 'Tests failed');
         }
+
+        // Search for and test similar files when tests fail
+        await this.searchAndTestSimilarFiles(failedPackages);
       }
 
       return {
@@ -735,6 +743,45 @@ export class GoCI {
     }
 
     return results;
+  }
+
+  /**
+   * Search for and test similar files when tests fail
+   */
+  private async searchAndTestSimilarFiles(failedPackages: string[]): Promise<void> {
+    this.logger.logInfo('Searching for similar test files to help identify common issues...');
+
+    for (const pkg of failedPackages) {
+      try {
+        // Find test files in the failed package
+        const packageDir = pkg === '.'
+          ? this.config.workingDirectory
+          : this.fileSystem.joinPath(this.config.workingDirectory, pkg.replace('./', ''));
+
+        const testFiles = await this.fileSystem.findGoTestFiles(packageDir);
+
+        for (const testFile of testFiles) {
+          const result = await this.similarTestFinder.findAndTestSimilarFiles(
+            testFile,
+            this.config.workingDirectory,
+          );
+
+          if (result.ok && result.data.totalSimilarFiles > 0) {
+            this.logger.logInfo(
+              `Similar files analysis for ${testFile}: ${result.data.successfulTests} passed, ${result.data.failedTests} failed`,
+            );
+
+            if (result.data.failedTests > 0) {
+              this.logger.logWarning(
+                `Found ${result.data.failedTests} similar files with failing tests, indicating a potential common issue`,
+              );
+            }
+          }
+        }
+      } catch (error) {
+        this.logger.logWarning(`Failed to analyze similar files for package ${pkg}: ${error}`);
+      }
+    }
   }
 
   private createSuccessResult(

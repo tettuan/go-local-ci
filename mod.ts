@@ -19,6 +19,8 @@ export { LogModeFactory } from './src/domain/log-mode-factory.ts';
 export { ProcessRunner } from './src/infrastructure/process-runner.ts';
 export { FileSystemService } from './src/infrastructure/file-system-service.ts';
 export { GoProjectDiscovery } from './src/infrastructure/go-project-discovery.ts';
+export { SerenaMCPClient } from './src/infrastructure/serena-mcp-client.ts';
+export { SimilarTestFinder } from './src/services/similar-test-finder.ts';
 
 // Types
 export type { GoCIConfig } from './src/types/go-ci-config.ts';
