@@ -1,7 +1,7 @@
 import type { FileSystemService } from './file-system-service.ts';
-import type { GoPackageInfo, GoModuleInfo } from '../types/go-package-info.ts';
+import type { GoModuleInfo, GoPackageInfo } from '../types/go-package-info.ts';
 import type { Result } from '../utils/result.ts';
-import { success, failure } from '../utils/result.ts';
+import { failure, success } from '../utils/result.ts';
 
 /**
  * Service for discovering Go packages and modules
@@ -19,10 +19,10 @@ export class GoProjectDiscovery {
 
       // Find all Go files
       const goFiles = await this.fileSystem.findGoFiles(directory);
-      
+
       // Group files by directory (package)
       const packageDirs = new Map<string, string[]>();
-      
+
       for (const file of goFiles) {
         const dir = this.fileSystem.getDirname(file);
         if (!packageDirs.has(dir)) {
@@ -39,13 +39,13 @@ export class GoProjectDiscovery {
         processedDirs.add(packageDir);
 
         const hasGoMod = await this.fileSystem.exists(
-          this.fileSystem.joinPath(packageDir, 'go.mod')
+          this.fileSystem.joinPath(packageDir, 'go.mod'),
         );
 
-        const isTestPackage = files.some(file => file.endsWith('_test.go'));
-        
+        const isTestPackage = files.some((file) => file.endsWith('_test.go'));
+
         const packageName = this.extractPackageName(packageDir);
-        
+
         packages.push({
           path: packageDir,
           name: packageName,
@@ -75,7 +75,7 @@ export class GoProjectDiscovery {
       for (const modFile of modFiles) {
         const moduleDir = this.fileSystem.getDirname(modFile);
         const moduleInfo = await this.parseGoMod(modFile);
-        
+
         if (moduleInfo.ok) {
           const packagesResult = await this.discoverGoPackages(moduleDir);
           if (packagesResult.ok) {
@@ -115,12 +115,12 @@ export class GoProjectDiscovery {
         const dir = this.fileSystem.getDirname(file);
         if (!processedDirs.has(dir)) {
           processedDirs.add(dir);
-          
+
           // Check if directory has any .go files (not just test files)
           const goFiles = await this.fileSystem.findGoFiles(dir);
-          const hasSourceFiles = goFiles.some(f => !f.endsWith('_test.go'));
-          const hasTestFiles = goFiles.some(f => f.endsWith('_test.go'));
-          
+          const hasSourceFiles = goFiles.some((f) => !f.endsWith('_test.go'));
+          const hasTestFiles = goFiles.some((f) => f.endsWith('_test.go'));
+
           // Include directories that have source files or test files
           if (hasSourceFiles || hasTestFiles) {
             const relativePath = this.fileSystem.getRelativePath(directory, dir);
@@ -157,14 +157,14 @@ export class GoProjectDiscovery {
   async findGoModRoot(startDir: string): Promise<Result<string, Error>> {
     try {
       let currentDir = this.fileSystem.resolvePath(startDir);
-      
+
       while (true) {
         const goModPath = this.fileSystem.joinPath(currentDir, 'go.mod');
-        
+
         if (await this.fileSystem.exists(goModPath)) {
           return success(currentDir);
         }
-        
+
         const parent = this.fileSystem.getDirname(currentDir);
         if (parent === currentDir) {
           // Reached root directory
@@ -172,7 +172,7 @@ export class GoProjectDiscovery {
         }
         currentDir = parent;
       }
-      
+
       return failure(new Error('No go.mod found'));
     } catch (error) {
       if (error instanceof Error) {
@@ -187,7 +187,9 @@ export class GoProjectDiscovery {
     return parts[parts.length - 1] || 'main';
   }
 
-  private async parseGoMod(modFile: string): Promise<Result<{ moduleName: string; goVersion: string }, Error>> {
+  private async parseGoMod(
+    modFile: string,
+  ): Promise<Result<{ moduleName: string; goVersion: string }, Error>> {
     try {
       const contentResult = await this.fileSystem.readTextFile(modFile);
       if (!contentResult.ok) {
@@ -196,7 +198,7 @@ export class GoProjectDiscovery {
 
       const content = contentResult.data;
       const lines = content.split('\n');
-      
+
       let moduleName = '';
       let goVersion = '';
 

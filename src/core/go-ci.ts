@@ -6,7 +6,7 @@ import type { ProcessResult } from '../infrastructure/process-runner.ts';
 import { FileSystemService } from '../infrastructure/file-system-service.ts';
 import { GoProjectDiscovery } from '../infrastructure/go-project-discovery.ts';
 import type { Result } from '../utils/result.ts';
-import { success, failure } from '../utils/result.ts';
+import { failure, success } from '../utils/result.ts';
 
 /**
  * Execution result for a batch of packages
@@ -75,13 +75,19 @@ export class GoCI {
 
     try {
       // Discover packages
-      const targetDir = this.config.hierarchy 
+      const targetDir = this.config.hierarchy
         ? this.fileSystem.joinPath(this.config.workingDirectory, this.config.hierarchy)
         : this.config.workingDirectory;
 
       const packagesResult = await this.projectDiscovery.getTestablePackages(targetDir);
       if (!packagesResult.ok) {
-        return this.createFailureResult(startTime, stages, 0, [], `Failed to discover packages: ${packagesResult.error.message}`);
+        return this.createFailureResult(
+          startTime,
+          stages,
+          0,
+          [],
+          `Failed to discover packages: ${packagesResult.error.message}`,
+        );
       }
 
       const packages = packagesResult.data;
@@ -106,17 +112,28 @@ export class GoCI {
       }
 
       // Check overall success
-      const success = stages.every(stage => stage.success);
-      
+      const success = stages.every((stage) => stage.success);
+
       if (success) {
         return this.createSuccessResult(startTime, stages, totalPackages);
       } else {
-        return this.createFailureResult(startTime, stages, totalPackages, failedPackages, 'One or more stages failed');
+        return this.createFailureResult(
+          startTime,
+          stages,
+          totalPackages,
+          failedPackages,
+          'One or more stages failed',
+        );
       }
-
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      return this.createFailureResult(startTime, stages, totalPackages, failedPackages, errorMessage);
+      return this.createFailureResult(
+        startTime,
+        stages,
+        totalPackages,
+        failedPackages,
+        errorMessage,
+      );
     }
   }
 
@@ -159,7 +176,7 @@ export class GoCI {
     this.logger.logStageStart('Go Module Check');
 
     try {
-      const targetDir = this.config.hierarchy 
+      const targetDir = this.config.hierarchy
         ? this.fileSystem.joinPath(this.config.workingDirectory, this.config.hierarchy)
         : this.config.workingDirectory;
 
@@ -198,7 +215,9 @@ export class GoCI {
         success,
         duration,
         ...(result.ok && result.data.stdout ? { output: result.data.stdout } : {}),
-        ...(result.ok ? (result.data.stderr ? { error: result.data.stderr } : {}) : { error: result.error.message }),
+        ...(result.ok
+          ? (result.data.stderr ? { error: result.data.stderr } : {})
+          : { error: result.error.message }),
       };
     } catch (error) {
       const duration = Date.now() - startTime;
@@ -221,7 +240,7 @@ export class GoCI {
 
     try {
       const failedPackages: string[] = [];
-      
+
       // Execute based on mode
       const results = await this.executeByMode(packages, async (pkgs) => {
         const args = ['build'];
@@ -280,7 +299,7 @@ export class GoCI {
 
     try {
       const failedPackages: string[] = [];
-      
+
       // Execute based on mode
       const results = await this.executeByMode(packages, async (pkgs) => {
         const args = ['test'];
@@ -342,7 +361,7 @@ export class GoCI {
 
     try {
       const failedPackages: string[] = [];
-      
+
       // Execute based on mode
       const results = await this.executeByMode(packages, async (pkgs) => {
         const args = ['vet'];
@@ -398,23 +417,27 @@ export class GoCI {
 
     try {
       const failedPackages: string[] = [];
-      
+
       // Execute gofmt check
       const results = await this.executeByMode(packages, async (pkgs) => {
         // Use gofmt -l to list files that need formatting
         const args = ['-l'];
-        
+
         // Add all .go files from packages
         const allFiles: string[] = [];
         for (const pkg of pkgs) {
-          const packageDir = pkg === '.' ? this.config.workingDirectory : 
-            this.fileSystem.joinPath(this.config.workingDirectory, pkg.replace('./', ''));
+          const packageDir = pkg === '.'
+            ? this.config.workingDirectory
+            : this.fileSystem.joinPath(this.config.workingDirectory, pkg.replace('./', ''));
           const goFiles = await this.fileSystem.findGoFiles(packageDir);
           allFiles.push(...goFiles);
         }
 
         if (allFiles.length === 0) {
-          return { ok: true, data: { success: true, code: 0, stdout: '', stderr: '', duration: 0 } };
+          return {
+            ok: true,
+            data: { success: true, code: 0, stdout: '', stderr: '', duration: 0 },
+          };
         }
 
         args.push(...allFiles);
@@ -488,7 +511,7 @@ export class GoCI {
       }
 
       const failedPackages: string[] = [];
-      
+
       // Execute based on mode
       const results = await this.executeByMode(packages, async (pkgs) => {
         const args = ['run'];
@@ -563,7 +586,7 @@ export class GoCI {
     try {
       const result = await executor(packages);
       const success = result.ok && result.data.success;
-      
+
       if (this.config.enableFallback && !success) {
         this.logger.logWarning('All mode failed, falling back to batch mode');
         return await this.executeBatch(packages, executor);
@@ -573,7 +596,7 @@ export class GoCI {
         success,
         packages: success ? [] : packages,
       };
-      
+
       if (result.ok) {
         resultObj.processResult = result.data;
       }
@@ -593,14 +616,14 @@ export class GoCI {
     executor: (packages: string[]) => Promise<Result<ProcessResult, Error>>,
   ): Promise<ExecutionResult[]> {
     const results: ExecutionResult[] = [];
-    
+
     for (let i = 0; i < packages.length; i += this.config.batchSize) {
       const batch = packages.slice(i, i + this.config.batchSize);
-      
+
       try {
         const result = await executor(batch);
         const success = result.ok && result.data.success;
-        
+
         if (this.config.enableFallback && !success) {
           // Fall back to single package mode for this batch
           for (const pkg of batch) {
@@ -679,21 +702,21 @@ export class GoCI {
     executor: (packages: string[]) => Promise<Result<ProcessResult, Error>>,
   ): Promise<ExecutionResult[]> {
     const results: ExecutionResult[] = [];
-    
+
     for (const pkg of packages) {
       try {
         const result = await executor([pkg]);
         const success = result.ok && result.data.success;
-        
+
         const resultObj: ExecutionResult = {
           success,
           packages: success ? [] : [pkg],
         };
-        
+
         if (result.ok) {
           resultObj.processResult = result.data;
         }
-        
+
         results.push(resultObj);
 
         if (this.config.stopOnFirstError && !success) {
@@ -714,10 +737,16 @@ export class GoCI {
     return results;
   }
 
-  private createSuccessResult(startTime: number, stages: StageResult[], totalPackages: number): GoCIResult {
+  private createSuccessResult(
+    startTime: number,
+    stages: StageResult[],
+    totalPackages: number,
+  ): GoCIResult {
     const duration = Date.now() - startTime;
-    const summary = `✅ All stages completed successfully. Processed ${totalPackages} packages in ${duration.toFixed(0)}ms.`;
-    
+    const summary = `✅ All stages completed successfully. Processed ${totalPackages} packages in ${
+      duration.toFixed(0)
+    }ms.`;
+
     this.logger.logSuccess('Go CI pipeline completed successfully!');
     this.logger.logSummary(summary);
 
@@ -739,8 +768,9 @@ export class GoCI {
     errorMessage: string,
   ): GoCIResult {
     const duration = Date.now() - startTime;
-    const summary = `❌ Go CI pipeline failed: ${errorMessage}. ${failedPackages.length} packages failed out of ${totalPackages} total.`;
-    
+    const summary =
+      `❌ Go CI pipeline failed: ${errorMessage}. ${failedPackages.length} packages failed out of ${totalPackages} total.`;
+
     this.logger.logError('Go CI pipeline failed!');
     this.logger.logSummary(summary);
 

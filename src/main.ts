@@ -64,9 +64,10 @@ export async function main(args: string[]): Promise<void> {
       logger.logError('Go CI failed!');
       Deno.exit(1);
     }
-
   } catch (error) {
-    console.error(`❌ Unexpected error: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    console.error(
+      `❌ Unexpected error: ${error instanceof Error ? error.message : 'Unknown error'}`,
+    );
     Deno.exit(1);
   }
 }

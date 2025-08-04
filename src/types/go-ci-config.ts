@@ -1,5 +1,5 @@
 import type { ExecutionMode } from './execution-mode.ts';
-import type { LogMode, BreakdownLoggerConfig } from './log-mode.ts';
+import type { BreakdownLoggerConfig, LogMode } from './log-mode.ts';
 
 /**
  * Configuration for the Go CI runner

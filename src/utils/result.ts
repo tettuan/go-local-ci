@@ -1,7 +1,7 @@
 /**
  * Result type for operations that can succeed or fail
  */
-export type Result<T, E = Error> = 
+export type Result<T, E = Error> =
   | { ok: true; data: T }
   | { ok: false; error: E };
 

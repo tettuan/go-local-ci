@@ -4,7 +4,7 @@ import type { ExecutionMode } from '../types/execution-mode.ts';
 import type { BreakdownLoggerConfig } from '../types/log-mode.ts';
 import { LogModeFactory } from '../domain/log-mode-factory.ts';
 import type { Result } from '../utils/result.ts';
-import { success, failure } from '../utils/result.ts';
+import { failure, success } from '../utils/result.ts';
 
 /**
  * Parsed command line arguments
@@ -80,7 +80,9 @@ export class CLIParser {
       // Validate mode
       const mode = parsed.mode as ExecutionMode;
       if (!['all', 'batch', 'single-package'].includes(mode)) {
-        return failure(new Error(`Invalid mode: ${mode}. Must be one of: all, batch, single-package`));
+        return failure(
+          new Error(`Invalid mode: ${mode}. Must be one of: all, batch, single-package`),
+        );
       }
 
       // Parse batch size
@@ -95,7 +97,11 @@ export class CLIParser {
       // Validate log mode
       const logMode = parsed['log-mode'];
       if (!['normal', 'silent', 'debug', 'error-files-only'].includes(logMode)) {
-        return failure(new Error(`Invalid log mode: ${logMode}. Must be one of: normal, silent, debug, error-files-only`));
+        return failure(
+          new Error(
+            `Invalid log mode: ${logMode}. Must be one of: normal, silent, debug, error-files-only`,
+          ),
+        );
       }
 
       // Validate debug mode requirements
@@ -112,7 +118,8 @@ export class CLIParser {
       }
 
       // Determine working directory - hierarchy takes precedence over explicit options
-      const hierarchy = parsed.hierarchy || parsed.dir || (parsed._.length > 0 ? parsed._[0] as string : undefined);
+      const hierarchy = parsed.hierarchy || parsed.dir ||
+        (parsed._.length > 0 ? parsed._[0] as string : undefined);
 
       return success({
         mode,

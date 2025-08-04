@@ -6,7 +6,7 @@ import { FileSystemService } from '../src/infrastructure/file-system-service.ts'
 
 Deno.test('CLIParser - parses basic arguments correctly', () => {
   const result = CLIParser.parseArgs(['--mode', 'batch', '--batch-size', '5']);
-  
+
   assertEquals(result.ok, true);
   if (result.ok) {
     assertEquals(result.data.mode, 'batch');
@@ -16,7 +16,7 @@ Deno.test('CLIParser - parses basic arguments correctly', () => {
 
 Deno.test('CLIParser - handles invalid mode', () => {
   const result = CLIParser.parseArgs(['--mode', 'invalid']);
-  
+
   assertEquals(result.ok, false);
   if (!result.ok) {
     assertEquals(result.error.message.includes('Invalid mode'), true);
@@ -49,11 +49,11 @@ Deno.test('FileSystemService - can be instantiated', () => {
 
 Deno.test('FileSystemService - exists method works', async () => {
   const fs = new FileSystemService();
-  
+
   // Test with a file that should exist
   const existsResult = await fs.exists('deno.json');
   assertEquals(typeof existsResult, 'boolean');
-  
+
   // Test with a file that should not exist
   const notExistsResult = await fs.exists('non-existent-file.xyz');
   assertEquals(notExistsResult, false);

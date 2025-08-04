@@ -1,7 +1,7 @@
-import { join, resolve, relative, dirname } from '@std/path';
+import { dirname, join, relative, resolve } from '@std/path';
 import { exists, walk } from '@std/fs';
 import type { Result } from '../utils/result.ts';
-import { success, failure } from '../utils/result.ts';
+import { failure, success } from '../utils/result.ts';
 
 /**
  * File system service for file operations
@@ -63,7 +63,7 @@ export class FileSystemService {
 
       for await (const entry of walk(directory, walkOptions)) {
         if (entry.isFile) {
-          if (!extensions || extensions.some(ext => entry.path.endsWith(ext))) {
+          if (!extensions || extensions.some((ext) => entry.path.endsWith(ext))) {
             yield entry.path;
           }
         }

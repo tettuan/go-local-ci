@@ -9,7 +9,7 @@ const FIXTURES_DIR = join(Deno.cwd(), 'tests', 'fixtures');
 
 Deno.test('GoCI - processes simple Go project successfully', async () => {
   const simpleProjectPath = join(FIXTURES_DIR, 'simple-go-project');
-  
+
   const config: GoCIConfig = {
     mode: 'all',
     batchSize: 10,
@@ -23,11 +23,11 @@ Deno.test('GoCI - processes simple Go project successfully', async () => {
 
   const loggerResult = GoCILogger.create(config.logMode!);
   assertEquals(loggerResult.ok, true);
-  
+
   if (loggerResult.ok) {
     const runnerResult = await GoCI.create(loggerResult.data, config, simpleProjectPath);
     assertEquals(runnerResult.ok, true);
-    
+
     if (runnerResult.ok) {
       const result = await runnerResult.data.run();
       assertExists(result);
@@ -40,7 +40,7 @@ Deno.test('GoCI - processes simple Go project successfully', async () => {
 
 Deno.test('GoCI - processes multi-package project successfully', async () => {
   const multiPackageProjectPath = join(FIXTURES_DIR, 'multi-package-project');
-  
+
   const config: GoCIConfig = {
     mode: 'batch',
     batchSize: 5,
@@ -54,11 +54,11 @@ Deno.test('GoCI - processes multi-package project successfully', async () => {
 
   const loggerResult = GoCILogger.create(config.logMode!);
   assertEquals(loggerResult.ok, true);
-  
+
   if (loggerResult.ok) {
     const runnerResult = await GoCI.create(loggerResult.data, config, multiPackageProjectPath);
     assertEquals(runnerResult.ok, true);
-    
+
     if (runnerResult.ok) {
       const result = await runnerResult.data.run();
       assertExists(result);
@@ -71,7 +71,7 @@ Deno.test('GoCI - processes multi-package project successfully', async () => {
 
 Deno.test('GoCI - handles problematic project correctly', async () => {
   const problematicProjectPath = join(FIXTURES_DIR, 'problematic-go-project');
-  
+
   const config: GoCIConfig = {
     mode: 'single-package',
     batchSize: 1,
@@ -85,11 +85,11 @@ Deno.test('GoCI - handles problematic project correctly', async () => {
 
   const loggerResult = GoCILogger.create(config.logMode!);
   assertEquals(loggerResult.ok, true);
-  
+
   if (loggerResult.ok) {
     const runnerResult = await GoCI.create(loggerResult.data, config, problematicProjectPath);
     assertEquals(runnerResult.ok, true);
-    
+
     if (runnerResult.ok) {
       const result = await runnerResult.data.run();
       assertExists(result);
@@ -103,7 +103,7 @@ Deno.test('GoCI - handles problematic project correctly', async () => {
 
 Deno.test('GoCI - hierarchy targeting works correctly', async () => {
   const multiPackageProjectPath = join(FIXTURES_DIR, 'multi-package-project');
-  
+
   const config: GoCIConfig = {
     mode: 'all',
     batchSize: 10,
@@ -118,11 +118,11 @@ Deno.test('GoCI - hierarchy targeting works correctly', async () => {
 
   const loggerResult = GoCILogger.create(config.logMode!);
   assertEquals(loggerResult.ok, true);
-  
+
   if (loggerResult.ok) {
     const runnerResult = await GoCI.create(loggerResult.data, config, multiPackageProjectPath);
     assertEquals(runnerResult.ok, true);
-    
+
     if (runnerResult.ok) {
       const result = await runnerResult.data.run();
       assertExists(result);

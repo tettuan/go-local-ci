@@ -1,6 +1,6 @@
-import type { LogMode, BreakdownLoggerConfig } from '../types/log-mode.ts';
+import type { BreakdownLoggerConfig, LogMode } from '../types/log-mode.ts';
 import type { Result } from '../utils/result.ts';
-import { success, failure } from '../utils/result.ts';
+import { failure, success } from '../utils/result.ts';
 
 /**
  * Logger for Go CI operations
