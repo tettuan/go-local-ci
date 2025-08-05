@@ -49,9 +49,11 @@ pub/subのようなイベントの受け渡しが、イベント境界の候補�
 
 
 ## 原案
+
 {input_text}
 
 ## 出力先
+
 `{destination_path}` へ出力する。
 `{destination_path}` がPATH記述でなければ、 `tmp/desing_domain_boundary.md` へ出力する。
 
