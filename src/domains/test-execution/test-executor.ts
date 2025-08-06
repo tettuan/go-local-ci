@@ -107,7 +107,7 @@ export class GoTestCommandBuilder {
         cleanedProcessEnv[key] = value;
       }
     }
-    
+
     const finalEnv = {
       ...cleanedProcessEnv,
       ...(env || {}),
@@ -161,9 +161,9 @@ export class TestExecutor {
       }));
     }
 
-    const target: ExecutionTarget = { 
-      type: 'package', 
-      importPath: importPathResult.data 
+    const target: ExecutionTarget = {
+      type: 'package',
+      importPath: importPathResult.data,
     };
 
     return this.execute(target, options);

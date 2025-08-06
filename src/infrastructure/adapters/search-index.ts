@@ -16,7 +16,11 @@ class InMemorySearchIndex implements SearchIndex {
   private testFunctions: Map<string, SearchMatch> = new Map();
   private dependencies: Map<string, SearchMatch> = new Map();
 
-  async indexProject(structure: ProjectStructure): Promise<void> {
+  indexProject(structure: ProjectStructure): Promise<void> {
+    return Promise.resolve(this.indexProjectSync(structure));
+  }
+
+  private indexProjectSync(structure: ProjectStructure): void {
     // Clear existing index
     this.clear();
 
@@ -53,13 +57,19 @@ class InMemorySearchIndex implements SearchIndex {
     }
   }
 
-  async search(query: SearchQuery): Promise<SearchMatch[]> {
+  search(query: SearchQuery): Promise<SearchMatch[]> {
+    return Promise.resolve(this.searchSync(query));
+  }
+
+  private searchSync(query: SearchQuery): SearchMatch[] {
     const matches: SearchMatch[] = [];
 
     switch (query.type) {
       case 'package-pattern':
         for (const [_, match] of this.packages) {
-          if (match.type === 'package' && this.matchesPattern(match.name, query.pattern, query.fuzzy)) {
+          if (
+            match.type === 'package' && this.matchesPattern(match.name, query.pattern, query.fuzzy)
+          ) {
             matches.push(match);
           }
         }

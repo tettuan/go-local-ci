@@ -32,12 +32,36 @@ export type DomainError =
   | { domain: 'resource'; kind: 'FileNotFound' | 'AccessDenied' | 'ParseFailed'; details: unknown }
   | {
     domain: 'search';
-    kind: 'LimitExceeded' | 'ExternalServiceError' | 'NoMatchesFound' | 'FileWriteFailed' | 'ReportGenerationFailed' | 'TemplateRenderFailed' | 'ParseFailed' | 'ThresholdNotMet' | 'SearchFailed';
+    kind:
+      | 'LimitExceeded'
+      | 'ExternalServiceError'
+      | 'NoMatchesFound'
+      | 'FileWriteFailed'
+      | 'ReportGenerationFailed'
+      | 'TemplateRenderFailed'
+      | 'ParseFailed'
+      | 'ThresholdNotMet'
+      | 'SearchFailed';
     details: unknown;
   }
   | {
     domain: 'environment';
-    kind: 'VariableNotSet' | 'StreamError' | 'PermissionDenied' | 'DockerNotAvailable' | 'ContainerCreationFailed' | 'ContainerExecutionFailed' | 'ContainerStopFailed' | 'ContainerRemovalFailed' | 'ContainerLogsFailed' | 'ContainerCleanupFailed' | 'MissingGoEnvironment' | 'EnvironmentAccessFailed' | 'CleanupFailed' | 'EnvFileNotFound' | 'EnvFileReadFailed';
+    kind:
+      | 'VariableNotSet'
+      | 'StreamError'
+      | 'PermissionDenied'
+      | 'DockerNotAvailable'
+      | 'ContainerCreationFailed'
+      | 'ContainerExecutionFailed'
+      | 'ContainerStopFailed'
+      | 'ContainerRemovalFailed'
+      | 'ContainerLogsFailed'
+      | 'ContainerCleanupFailed'
+      | 'MissingGoEnvironment'
+      | 'EnvironmentAccessFailed'
+      | 'CleanupFailed'
+      | 'EnvFileNotFound'
+      | 'EnvFileReadFailed';
     details: unknown;
   }
   | {

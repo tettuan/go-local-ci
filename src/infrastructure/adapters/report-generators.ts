@@ -60,9 +60,12 @@ class SimpleTemplateRenderer implements TemplateRenderer {
           // Replace {{@index}} with current index
           itemContent = itemContent.replace(/\{\{\s*@index\s*\}\}/g, String(index));
           // Replace {{.property}} with item property
-          itemContent = itemContent.replace(/\{\{\s*\.([\w]+)\s*\}\}/g, (m: string, prop: string) => {
-            return item[prop] !== undefined ? String(item[prop]) : m;
-          });
+          itemContent = itemContent.replace(
+            /\{\{\s*\.([\w]+)\s*\}\}/g,
+            (m: string, prop: string) => {
+              return item[prop] !== undefined ? String(item[prop]) : m;
+            },
+          );
           return itemContent;
         }).join('');
       });

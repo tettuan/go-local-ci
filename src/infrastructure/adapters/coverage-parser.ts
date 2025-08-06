@@ -59,7 +59,7 @@ class GoCoverageParser implements CoverageParser {
         if (!(pkgCoverage as any)._mutableFiles) {
           (pkgCoverage as any)._mutableFiles = mutableFiles;
         }
-        
+
         let fileCoverage = mutableFiles.get(file);
         if (!fileCoverage) {
           fileCoverage = {
