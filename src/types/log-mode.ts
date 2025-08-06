@@ -1,18 +1,9 @@
 /**
- * Log modes for the Go CI runner
+ * Log mode types and configurations
  */
-export interface LogMode {
-  readonly name: string;
-  readonly level: 'silent' | 'normal' | 'debug' | 'error-files-only';
-  readonly showProgress: boolean;
-  readonly showErrors: boolean;
-  readonly showDebug: boolean;
-}
+export type LogMode = 'normal' | 'silent' | 'debug' | 'error-files-only';
 
-/**
- * Breakdown logger configuration
- */
 export interface BreakdownLoggerConfig {
-  readonly key: string;
-  readonly length: 'W' | 'M' | 'L';
+  key: string;
+  length: 'W' | 'M' | 'L';
 }
