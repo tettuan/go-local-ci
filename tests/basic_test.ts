@@ -54,7 +54,7 @@ Deno.test('WorkingDirectory - creates valid directory', () => {
 Deno.test('ApplicationStateManager - can be instantiated', () => {
   const stateManager = new ApplicationStateManager();
   assertExists(stateManager);
-  
+
   const state = stateManager.getState();
   assertEquals(state.type, 'initializing');
 });
