@@ -29,9 +29,38 @@ import { createCoverageParser } from './adapters/coverage-parser.ts';
 import { createReportGenerators } from './adapters/report-generators.ts';
 
 /**
+ * Infrastructure adapters collection
+ */
+export interface InfrastructureAdapters {
+  appControl: {
+    parser: { parse: typeof parseCli };
+    stateManager: ApplicationStateManager;
+  };
+  testExecution: {
+    executor: TestExecutor;
+  };
+  errorControl: {
+    strategyController: StrategyController;
+    fallbackExecutor: FallbackExecutor;
+  };
+  resourceManagement: {
+    scanner: GoProjectScanner;
+  };
+  searchIntegration: {
+    searchService: SearchService;
+    coverageAnalyzer: CoverageAnalyzer;
+    reportGenerator: ReportGenerator;
+  };
+  environmentControl: {
+    environmentManager: EnvironmentManager;
+    dockerController: DockerController;
+  };
+}
+
+/**
  * Create all infrastructure adapters
  */
-export function createInfrastructureAdapters() {
+export function createInfrastructureAdapters(): InfrastructureAdapters {
   // Create base infrastructure
   const fileSystem = createFileSystemAdapter();
   const processExecutor = createProcessExecutor();

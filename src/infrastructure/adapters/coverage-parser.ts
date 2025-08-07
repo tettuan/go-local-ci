@@ -14,6 +14,23 @@ import type {
 } from '../../domains/search-integration/types.ts';
 
 /**
+ * Mutable types for coverage parsing
+ */
+type MutableCoverageMetric = {
+  total: number;
+  covered: number;
+  percentage: number;
+};
+
+type MutableFileCoverage = {
+  file: string;
+  statements: MutableCoverageMetric;
+  branches: MutableCoverageMetric;
+  functions: MutableCoverageMetric;
+  lines: MutableCoverageMetric;
+};
+
+/**
  * Go coverage parser
  */
 class GoCoverageParser implements CoverageParser {
@@ -55,9 +72,11 @@ class GoCoverageParser implements CoverageParser {
         }
 
         // Use a mutable map for file coverage during parsing
-        const mutableFiles = (pkgCoverage as any)._mutableFiles || new Map();
-        if (!(pkgCoverage as any)._mutableFiles) {
-          (pkgCoverage as any)._mutableFiles = mutableFiles;
+        type MutablePackageCoverage = PackageCoverage & { _mutableFiles?: Map<string, MutableFileCoverage> };
+        const mutablePkg = pkgCoverage as MutablePackageCoverage;
+        const mutableFiles = mutablePkg._mutableFiles || new Map<string, MutableFileCoverage>();
+        if (!mutablePkg._mutableFiles) {
+          mutablePkg._mutableFiles = mutableFiles;
         }
 
         let fileCoverage = mutableFiles.get(file);
@@ -89,9 +108,15 @@ class GoCoverageParser implements CoverageParser {
       const packageArray = Array.from(packages.values());
       for (const pkg of packageArray) {
         // Convert mutable files to proper FileCoverage format
-        const mutableFiles = (pkg as any)._mutableFiles;
+        type MutablePackageCoverage = PackageCoverage & { 
+          _mutableFiles?: Map<string, MutableFileCoverage>; 
+          files: FileCoverage[];
+          summary: CoverageSummary;
+        };
+        const mutablePkg = pkg as MutablePackageCoverage;
+        const mutableFiles = mutablePkg._mutableFiles;
         if (mutableFiles) {
-          (pkg as any).files = Array.from(mutableFiles.values()).map((file: any): FileCoverage => ({
+          mutablePkg.files = Array.from(mutableFiles.values()).map((file): FileCoverage => ({
             file: file.file,
             statements: {
               total: file.statements.total,
@@ -114,11 +139,11 @@ class GoCoverageParser implements CoverageParser {
               percentage: this.calculatePercentage(file.lines.covered, file.lines.total),
             },
           }));
-          delete (pkg as any)._mutableFiles;
+          delete mutablePkg._mutableFiles;
         }
 
         // Calculate package summary
-        pkg.summary = this.calculatePackageSummary(pkg.files);
+        mutablePkg.summary = this.calculatePackageSummary(mutablePkg.files);
       }
 
       // Calculate overall summary

@@ -3,7 +3,7 @@
  * Implements file system interfaces for domains
  */
 
-import { basename, dirname, join } from 'https://deno.land/std@0.208.0/path/mod.ts';
+import { basename, dirname, join } from '../../deps.ts';
 import type { FileSystem } from '../../domains/resource-management/project-scanner.ts';
 import type { EnvFileSystem } from '../../domains/environment-control/environment-manager.ts';
 
@@ -50,7 +50,7 @@ class DenoFileSystemAdapter implements FileSystem, EnvFileSystem {
   }
 
   joinPath(...segments: string[]): string {
-    return join(...segments);
+    return join(...segments as [string, ...string[]]);
   }
 
   getBaseName(path: string): string {

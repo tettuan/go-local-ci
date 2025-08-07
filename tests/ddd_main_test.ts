@@ -1,8 +1,5 @@
 import { assertEquals } from '@std/assert';
 import { main } from '../src/main.ts';
-import { join } from '@std/path';
-
-const FIXTURES_DIR = join(Deno.cwd(), 'tests', 'fixtures');
 
 // Mock console and Deno.exit to capture output
 let consoleOutput: string[] = [];
@@ -46,10 +43,10 @@ Deno.test('Main - processes simple Go project successfully', async () => {
   setupMocks();
   
   try {
-    const simpleProjectPath = join(FIXTURES_DIR, 'simple-go-project');
+    const simpleProjectPath = './tests/fixtures/simple-go-project';
     const args = [
       '--working-directory', simpleProjectPath,
-      '--mode', 'all',
+      '--mode', 'single-package',
     ];
     
     await main(args);
@@ -62,12 +59,12 @@ Deno.test('Main - processes simple Go project successfully', async () => {
     // Don't restore here, do it after checking
   }
   
+  restoreMocks();
+  
   // Check that tests passed
   const hasSuccess = consoleOutput.some(line => line.includes('✅'));
   assertEquals(hasSuccess, true);
   assertEquals(exitCode, 0);
-  
-  restoreMocks();
 });
 
 Deno.test('Main - handles help flag', async () => {

@@ -24,7 +24,7 @@ export async function main(args: string[]): Promise<void> {
     const eventBus = createEventBus({ maxLogSize: 1000 });
 
     // Create infrastructure adapters
-    const adapters = await createInfrastructureAdapters();
+    const adapters = createInfrastructureAdapters();
 
     // Create orchestrator configuration
     const orchestratorConfig = {
@@ -114,4 +114,9 @@ export async function main(args: string[]): Promise<void> {
     }
     Deno.exit(1);
   }
+}
+
+// Run main if this file is executed directly
+if (import.meta.main) {
+  await main(Deno.args);
 }
