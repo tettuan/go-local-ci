@@ -28,6 +28,8 @@ export interface DirectoryInfo {
 export interface DirectoryHierarchy extends DirectoryInfo {
   readonly children: DirectoryHierarchy[];
   readonly packageName?: string;
+  readonly goFiles: string[];
+  readonly testFiles: string[];
 }
 
 /**

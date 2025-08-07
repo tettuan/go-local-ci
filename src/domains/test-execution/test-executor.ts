@@ -143,7 +143,7 @@ export class TestExecutor {
   /**
    * Execute tests for a package path
    */
-  async test(
+  test(
     packagePath: string,
     options: GoTestOptions,
   ): Promise<Result<TestExecutionResult, DomainError>> {
@@ -154,11 +154,11 @@ export class TestExecutor {
 
     const importPathResult = PackageImportPath.create(packagePath);
     if (!importPathResult.ok) {
-      return failure(createDomainError({
+      return Promise.resolve(failure(createDomainError({
         domain: 'execution',
         kind: 'CommandBuildFailed',
         details: { message: `Invalid package path: ${packagePath}`, path: packagePath },
-      }));
+      })));
     }
 
     const target: ExecutionTarget = {
@@ -213,6 +213,9 @@ export class TestExecutor {
       startTime,
       endTime,
       success: processResult.data.exitCode === 0,
+      status: processResult.data.exitCode === 0 ? 'passed' : 'failed',
+      duration: endTime - startTime,
+      packages: [], // Will be populated by result analyzer
     };
 
     return success(result);

@@ -7,6 +7,7 @@ import type { Result } from '../../shared/result.ts';
 import { failure, success } from '../../shared/result.ts';
 import type { DomainError } from '../../shared/errors.ts';
 import type { GoTestOptions, TestExecutionResult } from './types.ts';
+import { PackageImportPath } from './types.ts';
 import type { TestExecutor } from './test-executor.ts';
 
 /**
@@ -161,15 +162,25 @@ export class ParallelTestExecutor {
         }
 
         // Create a failed result entry
-        results.push({
-          target: pkg,
-          success: false,
-          exitCode: 1,
-          duration: 0,
-          stdout: '',
-          stderr: `Test execution failed: ${result.error.kind}`,
-          packages: [pkg],
-        });
+        const importPath = PackageImportPath.create(pkg);
+        if (importPath.ok) {
+          results.push({
+            target: { type: 'package', importPath: importPath.data },
+            processResult: {
+              exitCode: 1,
+              stdout: '',
+              stderr: `Test execution failed: ${result.error.kind}`,
+              duration: 0,
+              killed: false,
+            },
+            startTime: Date.now(),
+            endTime: Date.now(),
+            success: false,
+            status: 'failed',
+            duration: 0,
+            packages: [{ name: pkg, tests: [] }],
+          });
+        }
       }
     }
 

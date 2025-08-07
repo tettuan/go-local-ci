@@ -221,6 +221,8 @@ export class GoProjectScanner {
       goFileCount: goFiles.length,
       children: childrenResult.data,
       packageName,
+      goFiles,
+      testFiles,
     };
 
     return success(hierarchy);
@@ -375,6 +377,8 @@ export class GoProjectScanner {
       testFileCount: 0,
       goFileCount: 0,
       children: [],
+      goFiles: [],
+      testFiles: [],
     };
   }
 

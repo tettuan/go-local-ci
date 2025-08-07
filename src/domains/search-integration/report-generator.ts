@@ -8,10 +8,7 @@ import { failure, success } from '../../shared/result.ts';
 import type { DomainError } from '../../shared/errors.ts';
 import { createDomainError } from '../../shared/errors.ts';
 import type {
-  BenchmarkComparison as _BenchmarkComparison,
-  BenchmarkDelta as _BenchmarkDelta,
-  BenchmarkResult as _BenchmarkResult,
-  ReportFormat as _ReportFormat,
+  BenchmarkComparison,
   ReportGenerationRequest,
 } from './types.ts';
 import type { TestExecutionResult } from '../test-execution/types.ts';
@@ -130,8 +127,8 @@ export class ReportGenerator {
         duration: r.duration,
         packages: r.packages.map((p) => ({
           name: p.name,
-          passed: p.passed,
-          duration: p.duration,
+          passed: p.passed || false,
+          duration: p.duration || 0,
           tests: p.tests,
         })),
       })),
@@ -163,11 +160,11 @@ export class ReportGenerator {
           xml += `  <testsuite name="${this.escapeXml(pkg.name)}" `;
           xml += `tests="${pkg.tests.length}" `;
           xml += `failures="${pkg.tests.filter((t) => !t.passed).length}" `;
-          xml += `time="${(pkg.duration / 1000).toFixed(3)}">\n`;
+          xml += `time="${((pkg.duration || 0) / 1000).toFixed(3)}">\n`;
 
           for (const test of pkg.tests) {
             xml += `    <testcase name="${this.escapeXml(test.name)}" `;
-            xml += `time="${(test.duration / 1000).toFixed(3)}"`;
+            xml += `time="${((test.duration || 0) / 1000).toFixed(3)}"`;
 
             if (test.passed) {
               xml += '/>\n';
@@ -257,7 +254,7 @@ export class ReportGenerator {
         md += `- Tests: ${pkg.tests.length}\n`;
         md += `- Passed: ${passedCount}\n`;
         md += `- Failed: ${pkg.tests.length - passedCount}\n`;
-        md += `- Duration: ${(pkg.duration / 1000).toFixed(3)}s\n\n`;
+        md += `- Duration: ${((pkg.duration || 0) / 1000).toFixed(3)}s\n\n`;
 
         if (includeDetails && pkg.tests.length > 0) {
           md += '| Test | Result | Duration |\n';
@@ -265,7 +262,7 @@ export class ReportGenerator {
 
           for (const test of pkg.tests) {
             const testIcon = test.passed ? '✅' : '❌';
-            md += `| ${test.name} | ${testIcon} | ${(test.duration / 1000).toFixed(3)}s |\n`;
+            md += `| ${test.name} | ${testIcon} | ${((test.duration || 0) / 1000).toFixed(3)}s |\n`;
           }
           md += '\n';
         }
@@ -296,24 +293,35 @@ export class ReportGenerator {
       const template = ''; // Would read from templatePath
       const renderResult = this.renderer.render(template, data);
       if (!renderResult.ok) {
-        return failure(createDomainError({
+        return Promise.resolve(failure(createDomainError({
           domain: 'search',
           kind: 'TemplateRenderFailed',
           details: { error: renderResult.error.message },
-        }));
+        })));
       }
-      return success(renderResult.data);
+      return Promise.resolve(success(renderResult.data));
     }
 
     // Default HTML template
     const html = this.generateDefaultHtml(data);
-    return success(html);
+    return Promise.resolve(success(html));
   }
 
   /**
    * Generate default HTML
    */
-  private generateDefaultHtml(data: Record<string, unknown>): string {
+  private generateDefaultHtml(data: {
+    title: string;
+    summary: {
+      totalTests: number;
+      passedTests: number;
+      failedTests: number;
+      passRate: number;
+      totalDuration: number;
+    };
+    results: TestExecutionResult[];
+    generated: string;
+  }): string {
     return `<!DOCTYPE html>
 <html>
 <head>
@@ -348,16 +356,14 @@ export class ReportGenerator {
       <th>Duration</th>
     </tr>
     ${
-      (data.results as Array<
-        { packages: Array<{ name: string; duration: number; tests: Array<{ passed: boolean }> }> }
-      >).flatMap((r) =>
+      data.results.flatMap((r) =>
         r.packages.map((p) => `
     <tr>
       <td>${p.name}</td>
       <td>${p.tests.length}</td>
       <td class="pass">${p.tests.filter((t) => t.passed).length}</td>
       <td class="fail">${p.tests.filter((t) => !t.passed).length}</td>
-      <td>${(p.duration / 1000).toFixed(3)}s</td>
+      <td>${((p.duration || 0) / 1000).toFixed(3)}s</td>
     </tr>
     `)
       ).join('')
@@ -409,7 +415,13 @@ export class ReportGenerator {
   /**
    * Generate summary statistics
    */
-  private generateSummary(results: TestExecutionResult[]): Record<string, unknown> {
+  private generateSummary(results: TestExecutionResult[]): {
+    totalTests: number;
+    passedTests: number;
+    failedTests: number;
+    passRate: number;
+    totalDuration: number;
+  } {
     let totalTests = 0;
     let passedTests = 0;
     let failedTests = 0;

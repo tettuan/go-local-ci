@@ -10,11 +10,13 @@ import { createDomainError } from '../../shared/errors.ts';
 import type {
   CoverageData,
   CoverageFormat,
+  CoverageMetric,
   CoverageReportRequest,
   CoverageSummary,
   FileCoverage,
   PackageCoverage,
 } from './types.ts';
+import { CoverageThresholdValue } from './types.ts';
 
 /**
  * Coverage data parser interface
@@ -71,7 +73,16 @@ export class CoverageAnalyzer {
   ): Promise<Result<string, DomainError>> {
     // Check threshold if provided
     if (request.threshold) {
-      const failures = request.threshold.getFailures(data.summary);
+      // Convert interface to value object
+      const thresholdResult = CoverageThresholdValue.create(request.threshold);
+      if (!thresholdResult.ok) {
+        return failure(createDomainError({
+          domain: 'search',
+          kind: 'ParseFailed',
+          details: { reason: 'Invalid coverage threshold', error: thresholdResult.error },
+        }));
+      }
+      const failures = thresholdResult.data.getFailures(data.summary);
       if (failures.length > 0) {
         return failure(createDomainError({
           domain: 'search',

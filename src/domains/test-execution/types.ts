@@ -53,6 +53,30 @@ export interface TestExecutionResult {
   readonly startTime: number;
   readonly endTime: number;
   readonly success: boolean;
+  // Convenience properties for backward compatibility with report generator
+  readonly status: string;
+  readonly duration: number; // milliseconds
+  readonly packages: TestPackageResult[];
+}
+
+/**
+ * Test package result (for compatibility with report generator)
+ */
+export interface TestPackageResult {
+  readonly name: string;
+  readonly tests: TestResult[];
+  readonly passed?: boolean;
+  readonly duration?: number;
+}
+
+/**
+ * Individual test result (for compatibility with report generator)
+ */
+export interface TestResult {
+  readonly name: string;
+  readonly passed: boolean;
+  readonly duration?: number;
+  readonly output?: string;
 }
 
 /**

@@ -179,7 +179,7 @@ export class SearchService {
   /**
    * Search dependencies
    */
-  async searchDependencies(
+  searchDependencies(
     moduleInfo: { dependencies: Array<{ module: string; version: string }> },
     pattern: SearchPattern,
   ): Promise<SearchMatch[]> {
@@ -197,7 +197,7 @@ export class SearchService {
       }
     }
 
-    return matches;
+    return Promise.resolve(matches);
   }
 
   /**
