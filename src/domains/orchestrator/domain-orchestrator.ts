@@ -161,6 +161,7 @@ export class DomainOrchestrator {
             const execResult = await this.testExecution.executor.test(
               './...',
               testOptions,
+              configResult.data.workingDirectory.value,
             );
 
             if (execResult.ok) {
@@ -185,6 +186,7 @@ export class DomainOrchestrator {
                 const execResult = await this.testExecution.executor.test(
                   pkg,
                   testOptions,
+                  configResult.data.workingDirectory.value,
                 );
 
                 if (execResult.ok) {
@@ -214,6 +216,7 @@ export class DomainOrchestrator {
               const execResult = await this.testExecution.executor.test(
                 pkg,
                 testOptions,
+                configResult.data.workingDirectory.value,
               );
 
               if (execResult.ok) {

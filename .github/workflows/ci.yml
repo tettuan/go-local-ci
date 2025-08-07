@@ -46,18 +46,21 @@ jobs:
 
     - name: Test CLI functionality
       run: |
+        # Enable debug mode for CI
+        export DEBUG=1
+        
         # Test with simple Go project fixture
         deno run --allow-read --allow-write --allow-run --allow-env ./mod.ts \
-          --cwd ./tests/fixtures/simple-go-project --log-mode silent
+          --working-directory ./tests/fixtures/simple-go-project --log-level info
         
         # Test with multi-package project fixture
         deno run --allow-read --allow-write --allow-run --allow-env ./mod.ts \
-          --cwd ./tests/fixtures/multi-package-project --log-mode silent || true
+          --working-directory ./tests/fixtures/multi-package-project --log-level info || true
         
         # Test hierarchy targeting
         deno run --allow-read --allow-write --allow-run --allow-env ./mod.ts \
-          --cwd ./tests/fixtures/multi-package-project \
-          --hierarchy ./cmd/calculator --log-mode silent || true
+          --working-directory ./tests/fixtures/multi-package-project \
+          --hierarchy ./cmd/calculator --log-level info || true
 
   publish:
     runs-on: ubuntu-latest

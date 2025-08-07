@@ -146,10 +146,11 @@ export class TestExecutor {
   test(
     packagePath: string,
     options: GoTestOptions,
+    workingDirectory?: string,
   ): Promise<Result<TestExecutionResult, DomainError>> {
     if (packagePath === './...') {
       const target: ExecutionTarget = { type: 'all-packages', pattern: './...' };
-      return this.execute(target, options);
+      return this.execute(target, options, undefined, workingDirectory);
     }
 
     const importPathResult = PackageImportPath.create(packagePath);
@@ -166,7 +167,7 @@ export class TestExecutor {
       importPath: importPathResult.data,
     };
 
-    return this.execute(target, options);
+    return this.execute(target, options, undefined, workingDirectory);
   }
 
   /**
@@ -176,6 +177,7 @@ export class TestExecutor {
     target: ExecutionTarget,
     options: GoTestOptions,
     env?: Record<string, string>,
+    workingDirectory?: string,
   ): Promise<Result<TestExecutionResult, DomainError>> {
     // Build command
     const commandResult = GoTestCommandBuilder.build(target, options, env);
@@ -188,7 +190,7 @@ export class TestExecutor {
 
     // Execute process
     const processResult = await this.processExecutor.execute(args, {
-      cwd: this.workingDirectory,
+      cwd: workingDirectory || this.workingDirectory,
       env: finalEnv,
       timeout: options.timeout * 1000, // Convert to milliseconds
     });

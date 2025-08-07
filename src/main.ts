@@ -59,6 +59,12 @@ export async function main(args: string[]): Promise<void> {
           console.log(`✅ Tests completed successfully in ${event.duration}ms`);
         } else {
           console.log(`❌ Tests failed after ${event.duration}ms`);
+          // Debug: Print more details
+          if (Deno.env.get('CI') || Deno.env.get('DEBUG')) {
+            console.log(`Exit code: ${event.exitCode}`);
+            if ('stdout' in event && event.stdout) console.log(`Stdout: ${event.stdout}`);
+            if ('stderr' in event && event.stderr) console.log(`Stderr: ${event.stderr}`);
+          }
         }
       }
     });
@@ -92,6 +98,27 @@ export async function main(args: string[]): Promise<void> {
 
     // Determine exit code based on test results
     const allTestsPassed = testResults?.every((r) => r.success) ?? false;
+
+    // Debug logging for CI
+    if (Deno.env.get('CI') || Deno.env.get('DEBUG')) {
+      console.log('=== Debug Info ===');
+      console.log(`Test results count: ${testResults?.length ?? 0}`);
+      console.log(`All tests passed: ${allTestsPassed}`);
+      if (testResults) {
+        testResults.forEach((r, i) => {
+          console.log(
+            `Test ${i}: success=${r.success}, status=${r.status}, exitCode=${r.processResult?.exitCode}`,
+          );
+          if (r.processResult?.stderr) {
+            console.log(`  stderr: ${r.processResult.stderr}`);
+          }
+          if (r.processResult?.stdout) {
+            console.log(`  stdout (first 200 chars): ${r.processResult.stdout.substring(0, 200)}`);
+          }
+        });
+      }
+      console.log('==================');
+    }
 
     if (allTestsPassed) {
       console.log('✅ All tests passed!');
