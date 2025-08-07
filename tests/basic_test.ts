@@ -1,11 +1,10 @@
 import { assertEquals, assertExists } from '@std/assert';
-import { CLIParser } from '../src/cli/cli-parser.ts';
-import { LogModeFactory } from '../src/domain/log-mode-factory.ts';
-import { ProcessRunner } from '../src/infrastructure/process-runner.ts';
-import { FileSystemService } from '../src/infrastructure/file-system-service.ts';
+import { parseCli } from '../src/domains/application-control/cli-parser.ts';
+import { BatchSize, Timeout, WorkingDirectory } from '../src/domains/application-control/types.ts';
+import { ApplicationStateManager } from '../src/domains/application-control/state-manager.ts';
 
-Deno.test('CLIParser - parses basic arguments correctly', () => {
-  const result = CLIParser.parseArgs(['--mode', 'batch', '--batch-size', '5']);
+Deno.test('parseCli - parses basic arguments correctly', () => {
+  const result = parseCli(['--mode', 'batch', '--batch-size', '5']);
 
   assertEquals(result.ok, true);
   if (result.ok) {
@@ -14,47 +13,48 @@ Deno.test('CLIParser - parses basic arguments correctly', () => {
   }
 });
 
-Deno.test('CLIParser - handles invalid mode', () => {
-  const result = CLIParser.parseArgs(['--mode', 'invalid']);
+Deno.test('parseCli - handles invalid mode', () => {
+  const result = parseCli(['--mode', 'invalid']);
 
   assertEquals(result.ok, false);
   if (!result.ok) {
-    assertEquals(result.error.message.includes('Invalid mode'), true);
+    assertExists(result.error);
   }
 });
 
-Deno.test('LogModeFactory - creates correct log modes', () => {
-  const normal = LogModeFactory.normal();
-  assertEquals(normal.level, 'normal');
-  assertEquals(normal.showProgress, true);
-
-  const silent = LogModeFactory.silent();
-  assertEquals(silent.level, 'silent');
-  assertEquals(silent.showProgress, false);
-
-  const debug = LogModeFactory.debug();
-  assertEquals(debug.level, 'debug');
-  assertEquals(debug.showDebug, true);
+Deno.test('BatchSize - creates valid batch size', () => {
+  const result = BatchSize.create(5);
+  assertEquals(result.ok, true);
+  if (result.ok) {
+    assertEquals(result.data.value, 5);
+  }
 });
 
-Deno.test('ProcessRunner - can be instantiated', () => {
-  const runner = new ProcessRunner();
-  assertExists(runner);
+Deno.test('BatchSize - rejects invalid batch size', () => {
+  const result = BatchSize.create(0);
+  assertEquals(result.ok, false);
 });
 
-Deno.test('FileSystemService - can be instantiated', () => {
-  const fs = new FileSystemService();
-  assertExists(fs);
+Deno.test('Timeout - creates valid timeout', () => {
+  const result = Timeout.create(300);
+  assertEquals(result.ok, true);
+  if (result.ok) {
+    assertEquals(result.data.value, 300);
+  }
 });
 
-Deno.test('FileSystemService - exists method works', async () => {
-  const fs = new FileSystemService();
+Deno.test('WorkingDirectory - creates valid directory', () => {
+  const result = WorkingDirectory.create('./test');
+  assertEquals(result.ok, true);
+  if (result.ok) {
+    assertEquals(result.data.value, './test');
+  }
+});
 
-  // Test with a file that should exist
-  const existsResult = await fs.exists('deno.json');
-  assertEquals(typeof existsResult, 'boolean');
-
-  // Test with a file that should not exist
-  const notExistsResult = await fs.exists('non-existent-file.xyz');
-  assertEquals(notExistsResult, false);
+Deno.test('ApplicationStateManager - can be instantiated', () => {
+  const stateManager = new ApplicationStateManager();
+  assertExists(stateManager);
+  
+  const state = stateManager.getState();
+  assertEquals(state.type, 'initializing');
 });

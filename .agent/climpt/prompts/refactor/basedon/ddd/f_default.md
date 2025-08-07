@@ -9,13 +9,12 @@ description:
 現在の実装をドメイン駆動設計と全域性（Totality）による設計で、堅牢になるようリファクタリングする。ドメイン領域の明確な理解に基づき、型安全性を強化して、骨格が通った芯の強いコード実装を実現する。
 
 `Totality` について、必ず `docs/totality.ja.md` を参照すること。
-ドメイン情報は、 `docs/domain/domain_boundary.md` および `docs/domain/domain_driven_design.md` を必ず読むこと。
-プロジェクト構造は、`docs/domain/architecture.md` に記載がある。
+ドメイン情報は、 `docs/domain/20250805-23-domain_boundary-20250805.md` および `docs/domain/20250805-23-domain_driven_design.md` を必ず読むこと。
 
-AI実装複雑化防止フレームワーク(`docs/ai-complexity-control_compact.ja.md`)に則り、エントロピー増大を抑制すること。
+AI実装複雑化防止フレームワーク(`docs/developments/ai-complexity-control_compact.ja.md`)に則り、エントロピー増大を抑制すること。
 
 テスト方針:
-テストに関しては `docs/testing.md` を読むこと。
+テストに関しては `docs/testing.ja.md` を読むこと。
 
 仕様:
 他の`docs/*`資料は、適宜実装ファイルを変更するタイミングで検索し、必要な資料を読むこと。

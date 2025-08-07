@@ -36,3 +36,8 @@ go.work.sum
 tests/fixtures/*/simple-project
 tests/fixtures/*/*_test
 tests/fixtures/*/main
+!.deno/bin/*
+
+tmp/
+.vscode/
+.vscode-test/

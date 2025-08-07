@@ -14,14 +14,13 @@ variables:
 実装方針:
 現在の{uv-scope}の実装をドメイン駆動設計と全域性（Totality）による設計で、堅牢になるようリファクタリングする。ドメイン領域の明確な理解に基づき、型安全性を強化して、骨格が通った芯の強いコード実装を実現する。
 
-`Totality` について、必ず `docs/development/totality_go.ja.md` を参照すること。
-ドメイン情報は、 `docs/domain/design_domain_boundary-20250802.md` および `docs/domain/architecture/subdomain_01_stock/**/*.md` を必ず読むこと。
-プロジェクト構造は、 `docs/architecture/domain-driven-implementation.md` に記載がある。
+`Totality` について、必ず `docs/development/totality.ja.md` を参照すること。
+ドメイン情報は、 `docs/domain/20250805-23-domain_boundary-20250805.md` および `docs/domain/architecture/*.md` を必ず読むこと。
 
 AI実装複雑化防止フレームワーク(`docs/development/ai-complexity-control_compact.ja.md`)に則り、エントロピー増大を抑制すること。
 
 テスト方針:
-テストに関しては `docs/tests/README.md`, `docs/tests/testing_guidelines.md` を読むこと。
+テストに関しては `docs/testing.ja.md` を読むこと。
 
 仕様:
 他の`docs/*`資料は、適宜実装ファイルを変更するタイミングで検索し、必要な資料を読むこと。
@@ -34,15 +33,14 @@ AI実装複雑化防止フレームワーク(`docs/development/ai-complexity-con
 4. 「ネクストアクション」の各実装を調べ、修正が必要なファイルをリスト化する。 
 5. リストに基づき、実装をドメイン設計とTotalityに基づいて完成させる
 6. 変更した実装に合わせてテストファイルを改修する
-7. `go test ./path/to/package -v` で、作成したファイルをテストする
+7. `deno test ./path/to/file --allow-read --allow-run --allow-env --allow-write` で、作成したファイルをテストする
 8. 3で作成したリストの全てが完了するまで、再び4に戻り、実装修正を行う
 
 **スコープのドメイン領域**: {uv-scope}
 
 ### 全ての変更が完了した後
 
-1. `make test-unit` で、ユニットテストが pass するまでテストを完成させる
-2. `make test` で、全テストが passするまでテストを完成させる
+1. `deno task ci:dirty` でテストを完成させる
 
 ### ネクストアクション
 
@@ -53,7 +51,7 @@ AI実装複雑化防止フレームワーク(`docs/development/ai-complexity-con
 ## 完了条件
 
 1. ドメイン駆動設計とTotalityに基づいた改修が完了した
-2. `make test` がエラー0件で通った
+2. `deno task ci:dirty` がエラー0件で通った
 
 
 # タスクの進め方

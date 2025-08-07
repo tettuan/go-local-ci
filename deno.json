@@ -6,7 +6,8 @@
     "test": "deno test --allow-read --allow-write --allow-run --allow-env",
     "fmt": "deno fmt",
     "lint": "deno lint",
-    "check": "deno check mod.ts"
+    "check": "deno check mod.ts",
+    "ci:dirty": "deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci --allow-dirty"
   },
   "imports": {
     "@std/assert": "jsr:@std/assert@^1.0.8",
@@ -52,7 +53,9 @@
       "LICENSE"
     ],
     "exclude": [
-      "tests/fixtures/**",
+      "tests/**/*",
+      ".agent/**/*",
+      "scripts/**/*",
       ".github/**",
       ".git/**"
     ]
