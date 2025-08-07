@@ -55,7 +55,7 @@ get_deno_version() {
 }
 
 get_ts_version() {
-  grep 'export const VERSION' "$VERSION_TS" | sed -E 's/.*\"([0-9.]+)\".*/\1/'
+  grep 'export const VERSION' "$VERSION_TS" | sed -E 's/.*["\'"'"']([0-9.]+)["\'"'"'].*/\1/'
 }
 
 # Version comparison function using semantic versioning
