@@ -1,6 +1,6 @@
 {
   "name": "@aidevtool/ci-go",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "exports": "./mod.ts",
   "tasks": {
     "test": "deno test --allow-read --allow-write --allow-run --allow-env",
@@ -35,16 +35,28 @@
     "semiColons": true,
     "singleQuote": true,
     "proseWrap": "preserve",
-    "include": ["src/", "mod.ts", "tests/"]
+    "include": [
+      "src/",
+      "mod.ts",
+      "tests/"
+    ]
   },
   "lint": {
-    "include": ["src/", "mod.ts", "tests/"],
+    "include": [
+      "src/",
+      "mod.ts",
+      "tests/"
+    ],
     "rules": {
-      "tags": ["recommended"]
+      "tags": [
+        "recommended"
+      ]
     }
   },
   "test": {
-    "include": ["tests/"]
+    "include": [
+      "tests/"
+    ]
   },
   "publish": {
     "include": [

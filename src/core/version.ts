@@ -5,7 +5,7 @@
  * The current version of ci-go, synchronized with deno.json.
  * @module
  */
-export const VERSION = '0.1.0';
+export const VERSION = '0.1.1';
 
 /**
  * Returns the current version string.
