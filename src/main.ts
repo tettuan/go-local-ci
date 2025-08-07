@@ -73,11 +73,11 @@ export async function main(args: string[]): Promise<void> {
           console.log(`📊 Exit code: ${event.exitCode}`);
           
           // Always show stdout/stderr for failed tests
-          if ('stdout' in event && event.stdout && event.stdout.trim()) {
+          if ('stdout' in event && event.stdout && typeof event.stdout === 'string' && event.stdout.trim()) {
             console.log(`\n📝 Test Output:`);
             console.log(event.stdout);
           }
-          if ('stderr' in event && event.stderr && event.stderr.trim()) {
+          if ('stderr' in event && event.stderr && typeof event.stderr === 'string' && event.stderr.trim()) {
             console.log(`\n⚠️  Error Output:`);
             console.log(event.stderr);
           }
