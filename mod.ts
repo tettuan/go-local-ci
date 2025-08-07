@@ -1,5 +1,5 @@
 /**
- * @tettuan/go-local-ci - A comprehensive Deno-based CI runner for Go projects
+ * @aidevtool/ci-go - A comprehensive Deno-based CI runner for Go projects
  *
  * This module provides a complete CI pipeline for Go projects including:
  * - Build checking

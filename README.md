@@ -1,6 +1,6 @@
-# @tettuan/go-local-ci
+# @aidevtool/ci-go
 
-[![JSR](https://jsr.io/badges/@tettuan/go-local-ci)](https://jsr.io/@tettuan/go-local-ci) [![GitHub](https://img.shields.io/github/license/tettuan/go-local-ci)](https://github.com/tettuan/go-local-ci/blob/main/LICENSE) [![Tests](https://github.com/tettuan/go-local-ci/actions/workflows/ci.yml/badge.svg)](https://github.com/tettuan/go-local-ci/actions/workflows/ci.yml)
+[![JSR](https://jsr.io/badges/@aidevtool/ci-go)](https://jsr.io/@aidevtool/ci-go) [![GitHub](https://img.shields.io/github/license/tettuan/go-local-ci)](https://github.com/tettuan/go-local-ci/blob/main/LICENSE) [![Tests](https://github.com/tettuan/go-local-ci/actions/workflows/ci.yml/badge.svg)](https://github.com/tettuan/go-local-ci/actions/workflows/ci.yml)
 
 A comprehensive Deno-based CI runner for Go projects with robust testing, formatting, linting, and build capabilities. Built with Domain-Driven Design principles and strong type safety for modern Go development workflows.
 
@@ -23,10 +23,10 @@ A comprehensive Deno-based CI runner for Go projects with robust testing, format
 
 ```bash
 # Run directly without installation
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go
 
 # Or add to your project
-deno add @tettuan/go-local-ci
+deno add @aidevtool/ci-go
 ```
 
 ### Using GitHub
@@ -46,22 +46,22 @@ deno run --allow-read --allow-write --allow-run --allow-env \
 
 ```bash
 # Run with default settings (all-packages mode - fastest)
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go
 ```
 
 #### Execution Mode Examples
 
 ```bash
 # All mode: fastest execution (default)
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   --mode all
 
 # Batch mode: balanced performance and safety
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   --mode batch --batch-size 5
 
 # Single-package mode: safest with detailed error reporting
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   --mode single-package
 ```
 
@@ -69,19 +69,19 @@ deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-loca
 
 ```bash
 # Normal mode: standard output
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   --log-mode normal
 
 # Silent mode: minimal output (optimal for CI/CD environments)
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   --log-mode silent
 
 # Error-files-only mode: optimal for error identification
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   --log-mode error-files-only
 
 # Debug mode: detailed logs with BreakdownLogger integration
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   --log-mode debug --log-key GO_CI_DEBUG --log-length M
 ```
 
@@ -91,23 +91,23 @@ You can target specific directory hierarchies for CI execution:
 
 ```bash
 # Execute only specific package (positional argument)
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   ./cmd/myapp
 
 # Execute only internal packages (--hierarchy option)
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   --hierarchy ./internal/
 
 # Execute only service layer
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   ./pkg/service/
 
 # Combine hierarchy and mode (execute cmd/ in batch mode)
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   --hierarchy ./cmd/ --mode batch
 
 # Combine hierarchy and log mode (execute pkg/ in debug mode)
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   ./pkg/ --log-mode error-files-only
 ```
 
@@ -115,23 +115,23 @@ deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-loca
 
 ```bash
 # Disable fallback and force batch mode
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   --mode batch --no-fallback
 
 # Execute only integration tests
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   --test-filter "*integration*"
 
 # Stop on first error
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   --stop-on-first-error
 
 # Specify working directory
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   --cwd /path/to/go-project
 
 # Enable verbose output for Go commands
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   --verbose
 ```
 
@@ -140,7 +140,7 @@ deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-loca
 For direct programmatic usage (advanced use cases):
 
 ```typescript
-import { GoCI, GoCILogger, CLIParser, LogModeFactory, main } from "@tettuan/go-local-ci";
+import { GoCI, GoCILogger, CLIParser, LogModeFactory, main } from "@aidevtool/ci-go";
 
 // Simple usage - run CI with default settings
 await main(["--mode", "batch"]);
@@ -177,7 +177,7 @@ import {
   LogModeFactory,
   ProcessRunner,
   GoProjectDiscovery,
-} from "@tettuan/go-local-ci";
+} from "@aidevtool/ci-go";
 
 // Use logger with different modes
 const debugMode = LogModeFactory.debug();
@@ -226,23 +226,23 @@ console.log(`Found ${goModules.length} Go modules`);
 
 ```bash
 # Fast execution (for CI/CD environments)
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   --mode all --log-mode silent
 
 # Detailed debugging in development environment
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   --mode single-package --log-mode debug --log-key DEV --log-length L
 
 # Balanced settings for medium-sized projects
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   --mode batch --batch-size 8 --log-mode error-files-only
 
 # Execute specific tests only (integration tests)
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   --test-filter "*integration*" --stop-on-first-error
 
 # Verbose Go output with normal logging
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   --verbose --log-mode normal
 ```
 
@@ -267,15 +267,15 @@ Efficient development for large Go projects is possible by targeting specific di
 
 ```bash
 # Hierarchy specification with positional argument (recommended)
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   ./cmd/
 
 # Hierarchy specification with --hierarchy option
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   --hierarchy ./pkg/
 
 # --dir option (alias for --hierarchy)
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   --dir ./internal/
 ```
 
@@ -300,23 +300,23 @@ deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-loca
 
 ```bash
 # Check command-line applications only
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   ./cmd/
 
 # Check internal packages only
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   ./internal/
 
 # Check specific service layer only
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   ./pkg/service/
 
 # Check API handlers only
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   ./api/handlers/
 
 # Check shared utilities only
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   ./pkg/utils/
 ```
 
@@ -331,7 +331,7 @@ deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-loca
 - Recommended use: Fast checks, small projects, CI/CD environments
 
 ```bash
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   --mode all
 ```
 
@@ -345,11 +345,11 @@ deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-loca
 
 ```bash
 # Default batch size (10 packages)
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   --mode batch
 
 # Custom batch size
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   --mode batch --batch-size 5
 ```
 
@@ -362,7 +362,7 @@ deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-loca
 - Recommended use: Development environment, debugging, detailed error investigation
 
 ```bash
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   --mode single-package
 ```
 
@@ -376,7 +376,7 @@ deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-loca
 - Recommended use: Interactive development environment
 
 ```bash
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   --log-mode normal
 ```
 
@@ -387,7 +387,7 @@ deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-loca
 - Recommended use: CI/CD environments, automation scripts
 
 ```bash
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   --log-mode silent
 ```
 
@@ -399,7 +399,7 @@ deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-loca
 - Recommended use: Quick error identification, code review
 
 ```bash
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   --log-mode error-files-only
 ```
 
@@ -412,15 +412,15 @@ deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-loca
 
 ```bash
 # Detailed debugging with BreakdownLogger integration
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   --log-mode debug --log-key GO_CI_DEBUG --log-length M
 
 # Debug with short messages
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   --log-mode debug --log-key DEV --log-length W
 
 # Detailed debug with long messages
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   --log-mode debug --log-key ANALYSIS --log-length L
 ```
 
@@ -431,23 +431,23 @@ The following environment variables can be used during CI execution:
 ```bash
 # Enable debug logging (alternative to --log-mode debug)
 export DEBUG=true
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go
 
 # Set log level
 export LOG_LEVEL=debug
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go
 
 # BreakdownLogger environment variables (when using debug mode)
 export GO_CI_LOCAL_KEY=MY_DEBUG_KEY
 export GO_CI_LOCAL_LENGTH=M
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   --log-mode debug --log-key GO_CI_LOCAL --log-length M
 
 # Go-specific environment variables
 export GOOS=linux
 export GOARCH=amd64
 export CGO_ENABLED=0
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go
 ```
 
 ## ⚡ Practical Usage Patterns
@@ -456,15 +456,15 @@ deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-loca
 
 ```bash
 # 1. Quick check during development
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   --mode single-package --log-mode error-files-only
 
 # 2. Complete check before commit
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   --mode batch
 
 # 3. Final verification before pull request
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   --mode all --log-mode silent
 ```
 
@@ -472,23 +472,23 @@ deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-loca
 
 ```bash
 # 1. Quick check on working package only (cmd/myapp/ directory)
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   ./cmd/myapp/ --mode single-package --log-mode error-files-only
 
 # 2. Batch check API-related packages only (api/ directory)
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   ./api/ --mode batch --log-mode normal
 
 # 3. Execute internal package tests only (internal/ directory)
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   ./internal/ --mode all
 
 # 4. Check library changes impact (pkg/ directory)
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   ./pkg/ --mode batch --stop-on-first-error
 
 # 5. Verify utility modifications (pkg/utils/ directory)
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   ./pkg/utils/ --mode all --log-mode silent
 ```
 
@@ -496,15 +496,15 @@ deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-loca
 
 ```bash
 # Usage in GitHub Actions etc.
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   --mode batch --log-mode silent --no-fallback
 
 # Usage in Jenkins etc. (detailed logging)
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   --mode batch --log-mode normal
 
 # Usage in Docker environment
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   --mode all --log-mode silent
 ```
 
@@ -512,15 +512,15 @@ deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-loca
 
 ```bash
 # Detailed investigation of specific issues
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   --mode single-package --log-mode debug --log-key ISSUE_123 --log-length L
 
 # Debug only tests matching specific pattern
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   --test-filter "*api*" --log-mode debug --log-key API_TEST --log-length M
 
 # Stop immediately after error for debugging
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   --stop-on-first-error --log-mode debug --log-key FIRST_ERROR --log-length L
 ```
 
@@ -676,9 +676,9 @@ MIT License - see the [LICENSE](https://github.com/tettuan/go-local-ci/blob/main
 
 ## 🔗 Links
 
-- [JSR Package](https://jsr.io/@tettuan/go-local-ci) - Official package registry
+- [JSR Package](https://jsr.io/@aidevtool/ci-go) - Official package registry
 - [GitHub Repository](https://github.com/tettuan/go-local-ci) - Source code and issues
-- [Documentation](https://jsr.io/@tettuan/go-local-ci/doc) - API documentation
+- [Documentation](https://jsr.io/@aidevtool/ci-go/doc) - API documentation
 - [Issues](https://github.com/tettuan/go-local-ci/issues) - Bug reports and feature requests
 - [Releases](https://github.com/tettuan/go-local-ci/releases) - Version history and changelogs
 

@@ -199,10 +199,10 @@ export class CLIParser {
    */
   static displayHelp(): void {
     console.log(`
-@tettuan/go-local-ci - Go CI Pipeline Runner
+@aidevtool/ci-go - Go CI Pipeline Runner
 
 USAGE:
-  deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci [OPTIONS] [HIERARCHY]
+  deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go [OPTIONS] [HIERARCHY]
 
 OPTIONS:
   --mode <mode>                  Execution mode: all, batch, single-package (default: all)
@@ -225,19 +225,19 @@ OPTIONS:
 
 EXAMPLES:
   # Run with default settings
-  deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci
+  deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go
 
   # Run in batch mode with custom batch size
-  deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci --mode batch --batch-size 5
+  deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go --mode batch --batch-size 5
 
   # Run in debug mode
-  deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci --log-mode debug --log-key DEBUG --log-length M
+  deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go --log-mode debug --log-key DEBUG --log-length M
 
   # Target specific directory
-  deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci ./cmd/
+  deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go ./cmd/
 
   # Silent mode for CI/CD
-  deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci --log-mode silent
+  deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go --log-mode silent
 `);
   }
 

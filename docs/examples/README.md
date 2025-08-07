@@ -1,6 +1,6 @@
 # Go Local CI Examples
 
-This directory contains examples of how to use @tettuan/go-local-ci with different Go project structures.
+This directory contains examples of how to use @aidevtool/ci-go with different Go project structures.
 
 ## Example Go Project
 
@@ -42,7 +42,7 @@ func TestAdd(t *testing.T) {
 EOF
 
 # Run Go CI
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go
 ```
 
 ## Multi-Package Project
@@ -105,13 +105,13 @@ func main() {
 EOF
 
 # Run Go CI on the entire project
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go
 
 # Run Go CI on specific package
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci ./pkg/math
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go ./pkg/math
 
 # Run Go CI in batch mode
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   --mode batch --batch-size 3
 ```
 
@@ -148,7 +148,7 @@ jobs:
     - name: Run Go CI
       run: |
         deno run --allow-read --allow-write --allow-run --allow-env \
-          jsr:@tettuan/go-local-ci --log-mode silent
+          jsr:@aidevtool/ci-go --log-mode silent
 ```
 
 ### Docker
@@ -166,7 +166,7 @@ COPY . .
 
 # Run Go CI
 RUN deno run --allow-read --allow-write --allow-run --allow-env \
-    jsr:@tettuan/go-local-ci --log-mode silent
+    jsr:@aidevtool/ci-go --log-mode silent
 
 # Build the application
 RUN go build -o main ./cmd/myapp
@@ -184,7 +184,7 @@ CMD ["./main"]
 
 ```bash
 # Enable debug logging for troubleshooting
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   --log-mode debug --log-key GO_DEBUG --log-length L
 ```
 
@@ -192,11 +192,11 @@ deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-loca
 
 ```bash
 # Run only integration tests
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   --test-filter "*integration*"
 
 # Run only unit tests (exclude integration)
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   --test-filter "^((?!integration).)*$"
 ```
 
@@ -204,6 +204,6 @@ deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-loca
 
 ```bash
 # If you have go.work file
-deno run --allow-read --allow-write --allow-run --allow-env jsr:@tettuan/go-local-ci \
+deno run --allow-read --allow-write --allow-run --allow-env jsr:@aidevtool/ci-go \
   --verbose --mode batch
 ```
