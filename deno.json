@@ -53,7 +53,9 @@
       "LICENSE"
     ],
     "exclude": [
-      "tests/fixtures/**",
+      "tests/**/*",
+      ".agent/**/*",
+      "scripts/**/*",
       ".github/**",
       ".git/**"
     ]

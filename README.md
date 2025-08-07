@@ -40,7 +40,7 @@ deno run --allow-read --allow-write --allow-run --allow-env \
 
 ### Command Line Interface (Main Use Case)
 
-@tettuan/go-local-ci is primarily designed as a CLI tool. Run the following commands in your Go project's root directory:
+@aidevtool/ci-go is primarily designed as a CLI tool. Run the following commands in your Go project's root directory:
 
 #### Basic Usage
 
