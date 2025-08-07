@@ -100,10 +100,10 @@ export class GoTestCommandBuilder {
       args.push(...options.buildFlags);
     }
 
-    // Merge environment variables, filtering out undefined and null values
+    // Merge environment variables, filtering out undefined, null, and non-string values
     const cleanedProcessEnv: Record<string, string> = {};
     for (const [key, value] of Object.entries(processEnv)) {
-      if (value !== undefined && value !== null) {
+      if (typeof value === 'string') {
         cleanedProcessEnv[key] = value;
       }
     }
