@@ -7,10 +7,7 @@ import type { Result } from '../../shared/result.ts';
 import { failure, success } from '../../shared/result.ts';
 import type { DomainError } from '../../shared/errors.ts';
 import { createDomainError } from '../../shared/errors.ts';
-import type {
-  BenchmarkComparison,
-  ReportGenerationRequest,
-} from './types.ts';
+import type { BenchmarkComparison, ReportGenerationRequest } from './types.ts';
 import type { TestExecutionResult } from '../test-execution/types.ts';
 
 /**

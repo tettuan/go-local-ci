@@ -145,43 +145,72 @@ export class DomainOrchestrator {
         const packages = this.extractPackages(scanResult.data);
         if (packages.length > 0) {
           const testOptions: GoTestOptions = {
-          verbose: configResult.data.verbose,
-          timeout: configResult.data.timeout.value,
-          race: false,
-          cover: false,
-          short: false,
-          failFast: false,
-        };
+            verbose: configResult.data.verbose,
+            timeout: configResult.data.timeout.value,
+            race: false,
+            cover: false,
+            short: false,
+            failFast: false,
+          };
 
-        testResults = [];
+          testResults = [];
 
-        // Execute tests based on mode
-        if (configResult.data.mode === 'all') {
-          // Run all tests in one command
-          const execResult = await this.testExecution.executor.test(
-            './...',
-            testOptions,
-          );
+          // Execute tests based on mode
+          if (configResult.data.mode === 'all') {
+            // Run all tests in one command
+            const execResult = await this.testExecution.executor.test(
+              './...',
+              testOptions,
+            );
 
-          if (execResult.ok) {
-            testResults = [execResult.data];
+            if (execResult.ok) {
+              testResults = [execResult.data];
+            } else {
+              errors.push(createDomainError({
+                domain: 'orchestrator',
+                kind: 'TestExecutionFailed',
+                details: { error: execResult.error },
+              }));
+            }
+          } else if (configResult.data.mode === 'batch') {
+            // Use parallel executor for batch mode
+            const filteredPackages = packages
+              .filter((pkg: GoPackageInfo) => pkg.hasTestFiles)
+              .map((pkg: GoPackageInfo) => pkg.importPath);
+
+            if (filteredPackages.length > 0) {
+              // TODO: Use parallel executor when integrated
+              // For now, execute sequentially
+              for (const pkg of filteredPackages) {
+                const execResult = await this.testExecution.executor.test(
+                  pkg,
+                  testOptions,
+                );
+
+                if (execResult.ok) {
+                  testResults.push(execResult.data);
+                } else {
+                  errors.push(createDomainError({
+                    domain: 'orchestrator',
+                    kind: 'TestExecutionFailed',
+                    details: { error: execResult.error, package: pkg },
+                  }));
+
+                  // Continue with other packages unless fail-fast is enabled
+                  if (this.config.enableFallback) {
+                    continue;
+                  }
+                  break;
+                }
+              }
+            }
           } else {
-            errors.push(createDomainError({
-              domain: 'orchestrator',
-              kind: 'TestExecutionFailed',
-              details: { error: execResult.error },
-            }));
-          }
-        } else if (configResult.data.mode === 'batch') {
-          // Use parallel executor for batch mode
-          const filteredPackages = packages
-            .filter((pkg: GoPackageInfo) => pkg.hasTestFiles)
-            .map((pkg: GoPackageInfo) => pkg.importPath);
+            // single-package mode - execute each package individually
+            const singlePackages = packages
+              .filter((pkg: GoPackageInfo) => pkg.hasTestFiles)
+              .map((pkg: GoPackageInfo) => pkg.importPath);
 
-          if (filteredPackages.length > 0) {
-            // TODO: Use parallel executor when integrated
-            // For now, execute sequentially
-            for (const pkg of filteredPackages) {
+            for (const pkg of singlePackages) {
               const execResult = await this.testExecution.executor.test(
                 pkg,
                 testOptions,
@@ -195,38 +224,9 @@ export class DomainOrchestrator {
                   kind: 'TestExecutionFailed',
                   details: { error: execResult.error, package: pkg },
                 }));
-
-                // Continue with other packages unless fail-fast is enabled
-                if (this.config.enableFallback) {
-                  continue;
-                }
-                break;
               }
             }
           }
-        } else {
-          // single-package mode - execute each package individually
-          const singlePackages = packages
-            .filter((pkg: GoPackageInfo) => pkg.hasTestFiles)
-            .map((pkg: GoPackageInfo) => pkg.importPath);
-
-          for (const pkg of singlePackages) {
-            const execResult = await this.testExecution.executor.test(
-              pkg,
-              testOptions,
-            );
-
-            if (execResult.ok) {
-              testResults.push(execResult.data);
-            } else {
-              errors.push(createDomainError({
-                domain: 'orchestrator',
-                kind: 'TestExecutionFailed',
-                details: { error: execResult.error, package: pkg },
-              }));
-            }
-          }
-        }
         } else if (packages.length === 0) {
           // No packages found, but scan succeeded
           testResults = [];
@@ -278,7 +278,7 @@ export class DomainOrchestrator {
   private _useReservedProperties(): void {
     // These properties are reserved for future domain integration
     void this.__errorControl;
-    void this.__searchIntegration; 
+    void this.__searchIntegration;
     void this.__environmentControl;
     void this.__eventBus;
   }

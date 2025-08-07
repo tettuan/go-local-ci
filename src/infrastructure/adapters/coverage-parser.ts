@@ -72,7 +72,9 @@ class GoCoverageParser implements CoverageParser {
         }
 
         // Use a mutable map for file coverage during parsing
-        type MutablePackageCoverage = PackageCoverage & { _mutableFiles?: Map<string, MutableFileCoverage> };
+        type MutablePackageCoverage = PackageCoverage & {
+          _mutableFiles?: Map<string, MutableFileCoverage>;
+        };
         const mutablePkg = pkgCoverage as MutablePackageCoverage;
         const mutableFiles = mutablePkg._mutableFiles || new Map<string, MutableFileCoverage>();
         if (!mutablePkg._mutableFiles) {
@@ -108,8 +110,8 @@ class GoCoverageParser implements CoverageParser {
       const packageArray = Array.from(packages.values());
       for (const pkg of packageArray) {
         // Convert mutable files to proper FileCoverage format
-        type MutablePackageCoverage = PackageCoverage & { 
-          _mutableFiles?: Map<string, MutableFileCoverage>; 
+        type MutablePackageCoverage = PackageCoverage & {
+          _mutableFiles?: Map<string, MutableFileCoverage>;
           files: FileCoverage[];
           summary: CoverageSummary;
         };
