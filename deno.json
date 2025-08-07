@@ -34,10 +34,10 @@
     "semiColons": true,
     "singleQuote": true,
     "proseWrap": "preserve",
-    "include": ["src/", "mod.ts"]
+    "include": ["src/", "mod.ts", "tests/"]
   },
   "lint": {
-    "include": ["src/", "mod.ts"],
+    "include": ["src/", "mod.ts", "tests/"],
     "rules": {
       "tags": ["recommended"]
     }

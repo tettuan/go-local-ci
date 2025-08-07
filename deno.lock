@@ -1,6 +1,7 @@
 {
   "version": "5",
   "specifiers": {
+    "jsr:@aidevtool/ci@*": "0.1.7",
     "jsr:@std/assert@0.224": "0.224.0",
     "jsr:@std/assert@^1.0.8": "1.0.13",
     "jsr:@std/cli@^1.0.8": "1.0.21",
@@ -14,9 +15,17 @@
     "jsr:@std/path@^1.0.8": "1.1.1",
     "jsr:@std/path@^1.1.0": "1.1.1",
     "jsr:@std/path@^1.1.1": "1.1.1",
+    "jsr:@tettuan/breakdownlogger@^1.0.8": "1.0.8",
     "npm:@types/node@*": "22.15.15"
   },
   "jsr": {
+    "@aidevtool/ci@0.1.7": {
+      "integrity": "30e6830b6de6df8ba88b4497d73d3ab132929be812caf7a00de4f781968207df",
+      "dependencies": [
+        "jsr:@std/path@^1.1.1",
+        "jsr:@tettuan/breakdownlogger"
+      ]
+    },
     "@std/assert@0.224.0": {
       "integrity": "8643233ec7aec38a940a8264a6e3eed9bfa44e7a71cc6b3c8874213ff401967f"
     },
@@ -53,6 +62,9 @@
       "dependencies": [
         "jsr:@std/internal@^1.0.9"
       ]
+    },
+    "@tettuan/breakdownlogger@1.0.8": {
+      "integrity": "fb472218ac543506f43aa908a015cb31dd3c9704317eefdadf43a2501720927c"
     }
   },
   "npm": {
