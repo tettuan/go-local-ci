@@ -19,6 +19,10 @@ export async function main(args: string[]): Promise<void> {
     Deno.exit(0);
   }
 
+  const mainStartTime = Date.now();
+  console.log(`\n🚀 Go CI Runner started at ${new Date(mainStartTime).toLocaleTimeString()}`);
+  console.log(`═══════════════════════════════════════════════════════════════════\n`);
+
   try {
     // Create event bus for domain communication
     const eventBus = createEventBus({ maxLogSize: 1000 });
@@ -49,23 +53,36 @@ export async function main(args: string[]): Promise<void> {
     // Subscribe to important events for logging
     eventBus.on('exec:started', (event) => {
       if (event.type === 'exec:started') {
-        console.log(`🚀 Starting test execution: ${event.target}`);
+        console.log(`\n🎯 Starting test execution phase`);
+        console.log(`📦 Target: ${event.target}`);
+        console.log(`───────────────────────────────────────────────────────────────────`);
       }
     });
 
     eventBus.on('exec:completed', (event) => {
       if (event.type === 'exec:completed') {
+        console.log(`\n📊 Test Execution Results:`);
+        console.log(`───────────────────────────────────────────────────────────────────`);
+        
         if (event.exitCode === 0) {
-          console.log(`✅ Tests completed successfully in ${event.duration}ms`);
+          console.log(`✅ Status: SUCCESS`);
+          console.log(`⏱️  Duration: ${event.duration}ms (${(event.duration / 1000).toFixed(2)}s)`);
         } else {
-          console.log(`❌ Tests failed after ${event.duration}ms`);
-          // Debug: Print more details
-          if (Deno.env.get('CI') || Deno.env.get('DEBUG')) {
-            console.log(`Exit code: ${event.exitCode}`);
-            if ('stdout' in event && event.stdout) console.log(`Stdout: ${event.stdout}`);
-            if ('stderr' in event && event.stderr) console.log(`Stderr: ${event.stderr}`);
+          console.log(`❌ Status: FAILED`);
+          console.log(`⏱️  Duration: ${event.duration}ms (${(event.duration / 1000).toFixed(2)}s)`);
+          console.log(`📊 Exit code: ${event.exitCode}`);
+          
+          // Always show stdout/stderr for failed tests
+          if ('stdout' in event && event.stdout && event.stdout.trim()) {
+            console.log(`\n📝 Test Output:`);
+            console.log(event.stdout);
+          }
+          if ('stderr' in event && event.stderr && event.stderr.trim()) {
+            console.log(`\n⚠️  Error Output:`);
+            console.log(event.stderr);
           }
         }
+        console.log(`───────────────────────────────────────────────────────────────────`);
       }
     });
 
@@ -90,10 +107,16 @@ export async function main(args: string[]): Promise<void> {
 
     // Log any non-fatal errors
     if (errors.length > 0) {
-      console.warn(`⚠️  ${errors.length} non-fatal errors occurred:`);
+      console.log(`\n⚠️  Non-fatal errors encountered (${errors.length}):`);
+      console.log(`───────────────────────────────────────────────────────────────────`);
       for (const error of errors) {
-        console.warn(`  - ${error.domain}: ${error.kind}`);
+        console.warn(`  • Domain: ${error.domain}`);
+        console.warn(`    Kind: ${error.kind}`);
+        if (error.details) {
+          console.warn(`    Details: ${JSON.stringify(error.details, null, 2)}`);
+        }
       }
+      console.log(`───────────────────────────────────────────────────────────────────`);
     }
 
     // Determine exit code based on test results
@@ -120,6 +143,13 @@ export async function main(args: string[]): Promise<void> {
       console.log('==================');
     }
 
+    const mainEndTime = Date.now();
+    const totalDuration = mainEndTime - mainStartTime;
+    
+    console.log(`\n═══════════════════════════════════════════════════════════════════`);
+    console.log(`🏁 Total execution time: ${totalDuration}ms (${(totalDuration / 1000).toFixed(2)}s)`);
+    console.log(`🕐 Finished at: ${new Date(mainEndTime).toLocaleTimeString()}`);
+    
     if (allTestsPassed) {
       console.log('✅ All tests passed!');
       Deno.exit(0);
@@ -128,17 +158,23 @@ export async function main(args: string[]): Promise<void> {
       Deno.exit(1);
     }
   } catch (error) {
+    const mainEndTime = Date.now();
+    const totalDuration = mainEndTime - mainStartTime;
+    
     // Re-throw mock Process.exit errors for testing
     if (error instanceof Error && error.message.startsWith('Process.exit')) {
       throw error;
     }
 
+    console.log(`\n═══════════════════════════════════════════════════════════════════`);
     console.error(
       `❌ Unexpected error: ${error instanceof Error ? error.message : 'Unknown error'}`,
     );
     if (error instanceof Error && error.stack) {
       console.error('Stack trace:', error.stack);
     }
+    console.log(`🏁 Total execution time before error: ${totalDuration}ms (${(totalDuration / 1000).toFixed(2)}s)`);
+    console.log(`🕐 Failed at: ${new Date(mainEndTime).toLocaleTimeString()}`);
     Deno.exit(1);
   }
 }
