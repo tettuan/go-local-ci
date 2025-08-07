@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # ============================================================================
-# Automated Version Management Script for @aidevtool/tmux-monitor (Deno/JSR)
+# Automated Version Management Script for @aidevtool/ci-go (Deno/JSR)
 #
 # Purpose:
 #   - Ensures version consistency between deno.json and src/core/version.ts
@@ -9,7 +9,7 @@
 #   - Performs pre-release checks (git status, local CI, GitHub Actions)
 #   - Manages GitHub tags and JSR version synchronization
 #   - Automatically commits, tags, and pushes version changes
-#   - Prepares for JSR publication as @aidevtool/tmux-monitor
+#   - Prepares for JSR publication as @aidevtool/ci-go
 #
 # Usage:
 #   ./scripts/bump_version.sh [--major|--minor|--patch]
@@ -47,7 +47,7 @@ set -euo pipefail
 # Constants
 DENO_JSON="deno.json"
 VERSION_TS="src/core/version.ts"
-JSR_META_URL="https://jsr.io/@aidevtool/tmux-monitor/meta.json"
+JSR_META_URL="https://jsr.io/@aidevtool/ci-go/meta.json"
 
 # Helper Functions
 get_deno_version() {
@@ -281,7 +281,7 @@ cat > "$tmp_ts" <<EOF
 // The version is synchronized with deno.json.
 
 /**
- * The current version of tmux-monitor, synchronized with deno.json.
+ * The current version of ci-go, synchronized with deno.json.
  * @module
  */
 export const VERSION = "$new_version";
@@ -305,8 +305,8 @@ export function getVersionInfo(): {
 } {
   return {
     version: VERSION,
-    name: "@aidevtool/tmux-monitor",
-    description: "A comprehensive tmux monitoring tool designed for command-line usage",
+    name: "@aidevtool/ci-go",
+    description: "A Go CI tool wrapper for efficient test execution with domain-driven design",
   };
 }
 EOF
@@ -337,7 +337,7 @@ git commit -m "chore: bump version to $new_version
 
 - Update version in deno.json and src/core/version.ts
 - Maintain version consistency across project files
-- Ready for JSR publication as @aidevtool/tmux-monitor@$new_version"
+- Ready for JSR publication as @aidevtool/ci-go@$new_version"
 
 # 4.2 Git Tag
 git tag "v$new_version"
@@ -350,9 +350,9 @@ echo "✓ Git operations completed"
 
 echo -e "\n🎉 Version bump completed successfully!"
 echo "Version bumped to $new_version, committed, tagged, and pushed."
-echo "JSR package: @aidevtool/tmux-monitor@$new_version"
+echo "JSR package: @aidevtool/ci-go@$new_version"
 echo -e "\nNext steps:"
 echo "  1. GitHub Actions will automatically publish to JSR"
-echo "  2. Verify publication: https://jsr.io/@aidevtool/tmux-monitor"
+echo "  2. Verify publication: https://jsr.io/@aidevtool/ci-go"
 echo "  3. Check GitHub Actions status: https://github.com/$(git config --get remote.origin.url | sed 's/.*github.com[:/]\(.*\)\.git/\1/')/actions"
 echo "" 
