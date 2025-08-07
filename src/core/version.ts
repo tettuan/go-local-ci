@@ -5,7 +5,7 @@
  * The current version of ci-go, synchronized with deno.json.
  * @module
  */
-export const VERSION = "0.1.0";
+export const VERSION = '0.1.0';
 
 /**
  * Returns the current version string.
@@ -26,7 +26,7 @@ export function getVersionInfo(): {
 } {
   return {
     version: VERSION,
-    name: "@aidevtool/ci-go",
-    description: "A Go CI tool wrapper for efficient test execution with domain-driven design",
+    name: '@aidevtool/ci-go',
+    description: 'A Go CI tool wrapper for efficient test execution with domain-driven design',
   };
 }
