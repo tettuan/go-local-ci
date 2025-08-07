@@ -5,21 +5,27 @@ This directory contains Go project fixtures used for testing the Go CI tool.
 ## Structure
 
 ### `simple-go-project/`
+
 A basic Go project with:
+
 - Single `main.go` file with simple functions
 - Comprehensive test coverage
 - Proper formatting and no issues
 - Used for testing successful CI runs
 
 ### `multi-package-project/`
+
 A more complex Go project with:
+
 - Multiple packages (`pkg/math/`, `cmd/calculator/`)
 - Internal dependencies between packages
 - Proper Go module structure
 - Used for testing multi-package scenarios and hierarchy targeting
 
 ### `problematic-go-project/`
+
 A Go project with intentional issues:
+
 - Formatting problems (missing indentation, spacing)
 - Go vet warnings (unused variables)
 - Failing tests (wrong expected values)
